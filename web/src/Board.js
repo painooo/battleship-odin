@@ -43,7 +43,6 @@ export default class Board {
     let cell = this.board[x][y];
     if (!cell.isHit) {
       cell.isHit = true;
-      console.log(cell)
       if (cell.ship != null) cell.ship.hit();
     }
   }
