@@ -21,7 +21,7 @@ export default class Board {
     } // I do not know any better way of doing this
     // perhaps a util. function might help
     if (direction == "HORIZONTAL") {
-      if (x + length > 9) return false;
+      if (x + length > 9 || x + length < 0) return false;
       for (let i = x; i < x + length; i++) { // Entire area gets checked first
         if (this.board[i][y].ship != null) return false;
       }
@@ -29,7 +29,7 @@ export default class Board {
         this.board[i][y].ship = ship;
       }
     } else {
-      if (y + length > 9) return false;
+      if (y + length > 9 || y + length < 0) return false;
       for (let i = y; i < y + length; i++) { // Entire area gets checked first
         if (this.board[x][i].ship != null) return false;
       }
