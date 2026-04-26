@@ -5,7 +5,7 @@ import BuildMode from './BuildMode.js';
 import AttackMode from './AttackMode.js';
 import { placeRandom, makeShipCopy } from './util.js';
 
-const globalShipList = {"Dummy1": 1,"Dummy2": 2};
+const globalShipList = {"Carrier": 5, "Battleship": 4, "Cruiser": 3, "Submarine": 3, "Destroyer": 2};
 
 const boardTwo = new Board();
 const playerTwoShips = placeRandom(makeShipCopy(globalShipList), boardTwo);
