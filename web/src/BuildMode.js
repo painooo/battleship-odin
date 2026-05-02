@@ -51,6 +51,7 @@ export default function BuildMode(shipList, board, onSubmit) { // I do not want 
   }
 
   const area = document.createElement("div");
+  area.classList.add("area");
   const args = {playBoard: board, onBuild} 
   const renderBuild = () => render(args, "toBuild", area, shipList);
 

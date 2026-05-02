@@ -17,6 +17,7 @@ export default function AttackMode([ownBoard, playerOneShips], [otherBoard, play
     }
   }
   const area = document.createElement("div");
+  area.classList.add("area");
   const args = {playBoard: otherBoard, statBoard: ownBoard, onAttack};
   render(args, "toAttack", area);
   document.body.appendChild(area);
