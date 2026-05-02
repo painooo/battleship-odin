@@ -1,0 +1,120 @@
+Functionality
+-
+- Build Mode
+  - User is greeted by a grid and list of ships
+  - Grid will be a 10x10 grid
+    - **Internally** grid will be a matrix
+  - Ships will be displayed based on their length
+    - As a list of buttons
+    - Width of these buttons are managed by css
+    - **Internally** ships don't *exist* instead are represented by lengths
+    - As ships are placed they disappear from list
+    - Ships must not overlap or be placed off grid
+  - A reset btn will be provided to reset grid and ship list
+  - Once all ships are placed a submit btn will pop next to reset
+    - Once clicked
+      - Enter attack mode
+- Attack Mode
+  - User is greeted by two grids (enemy and self)
+  - User can't see the ships on the enemies but can see it's own ships
+  - User should be able to see the hits of cells
+  - User can click on enemy cell to attack it
+    - If user already clicked cell nothing will happen
+    - If cell has nothing under it
+      - Cell color will change to gray
+      - **Internally** isClicked is set to true & grid is rerendered
+    - If cell has ship under it
+      - Cell color will change to orange
+      - **Internally** isClicked is set to true & grid is rerendered
+    - **Internally** cell is loaded to have isClicked = true
+    - Then enemy will attack
+- When a ship is sunk it's color and it's parts changes to red 
+
+
+
+Components
+-
+- Game
+  - Responsible for **orchestrating** game logic
+    - Game stage
+    - Player turns
+    - Board renders
+  - **Note:** Game has access to both player's board and global ship list
+  - To render the board a function will be used
+    - The function will take ({playBoard, statBoard, onAttack, onBuild}, status, area)
+      - playBoard is board that's going to have interactability
+      - statBoard is board that's just going to display it's status
+      - onAttack is the hook used when a cell is attacked
+      - onBuild is the hook used when a ship is placed
+      - status means toAttack or toBuild
+      - area is where the ship will be appended to as a child
+    - Both boards will be iterated to
+      - playColumn & statColumn ->
+      - playCell & StatCell
+        - Both receive the status of the cell
+        - if toBuild:
+          - then playCell when clicked should
+            - get orientation from #directionSelection
+            - get ship from #shipSelection
+            - And use it's coordinates to
+            - board.placeShip()
+              - The result of this will be fed into onBuild
+        - if toAttack:
+          - then playCell when clicked should
+          - check if cell isn't already hit
+            - board.hitCell()
+            - trigger onAttack()
+    - Again depending on status
+      - if toBuild playBoard is the only one displayed
+      - if toAttack statBoard is first then playBoard is displayed
+  - During build stage logic should look like:
+    - `const onSubmit = isSP ? AIRandomize() : BuildMode(renderFn, shipList, secondBoard, switchAttack)`
+    - First: BuildMode(renderFn, shipList, firstBoard, onSubmit())
+  - During attack stage logic should look like:
+    - run AttackMode component (lolz)
+- BuildMode (component)
+  - Takes in render function, ship list, current board, and onSubmit()
+  - `onBuild = (status) => status ? shipList.shift() : null`;
+    - And set shipListDOM to new value
+  - It'll render it in build mode and feed it onBuild
+  - It'll render all buttons and shipList
+  - When submit button is clicked it'll trigger onSubmit()
+- AttackMode (component)
+  - Takes takes two boards
+  - onAttack -> second player plays and back to first player
+    - Also iterate both groups shipList `for (let i in obj)`
+    - To check if all ships are sunk
+      - If so trigger onWin()
+  - It'll just render the two boards
+- Board
+  - Responsible for board status
+    - Board itself
+    - Ship placement
+    - Attacks
+  - Board will be a 10x10 grid
+    - There should be a function to create the board (for reset and init)
+    - Each cell of the grid contains status like
+      - isHit? (default is false)
+      - ship? (default is null)
+  - To place a ship
+    - (Based on orientation)
+    - Determine if spot is valid
+      - If length + head less is 10
+      - then iterate over cells to check for overlap (if isShip is true)
+    - If so -> iterate the cells and set ship to the ship
+      - So each cell is the same ship instance
+    - If not -> nothing happens
+  - To place an attack
+    - Determine cell at location
+    - If location wasn't hit
+      - Set isHit to true
+      - And if there was a ship trigger it's 'hit' function
+
+- Ship
+  - Responsible for keeping track of ship status
+    - isSunk? (default is false)
+    - hits
+    - length
+  - To keep track of hits and isSunk we'll use a function
+    - That will be called each time the shit is hit
+    - And when hits is >= to length then isSunk will be true
