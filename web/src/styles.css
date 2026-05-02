@@ -1,5 +1,30 @@
 body {
-  background: green;
-  border: goldenrod;
   padding: 10px;
+}
+.cell {
+  width:20px;
+  height:20px;
+}
+.hit {
+  background-color: gray;
+}
+.ship {
+  background-color: orange;
+}
+.hit.ship {
+  background-color: black;
+}
+.hit.ship.sunk {
+  background-color: red;
+}
+.board {
+  width:230px;
+  height:230px;
+  transform-origin: center;
+  transform: rotate(-45deg) scale(-1, 1) rotate(45deg) scale(-1, 1);
+  /*This is the best part of this entire app :)*/
+}
+.row {
+  display:flex;
+  flex-direction: row;
 }
